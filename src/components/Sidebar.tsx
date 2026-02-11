@@ -20,47 +20,47 @@ export function Sidebar() {
   const navigate = useNavigate();
 
   const sidebarLinks = [
-    {
-      label: "Dashboard",
-      path: "/dashboard",
-      icon: LayoutDashboard,
-    },
-    {
-      label: "Posts",
-      path: "/posts",
-      icon: FileText,
-    },
-    {
-      label: "All Users",
-      path: "/users",
-      icon: Users,
-    },
-    {
-      label: "Individuals",
-      path: "/individuals",
-      icon: User,
-    },
-    {
-      label: "Groups",
-      path: "/groups",
-      icon: UsersRound,
-    },
-    {
-      label: "Professional Requests",
-      path: "/professional-requests",
-      icon: BadgeCheck,
-    },
-    {
-      label: "Subscription Statistics",
-      path: "/subscriptions/statistics",
-      icon: BarChart3,
-    },
-    {
-      label: "Subscription Plans",
-      path: "/subscriptions/plans",
-      icon: CreditCard,
-    },
-  ];
+  {
+    label: "Dashboard",
+    path: "/dashboard",
+    icon: LayoutDashboard,
+  },
+  {
+    label: "Posts",
+    path: "/dashboard/posts",
+    icon: FileText,
+  },
+  {
+    label: "All Users",
+    path: "/dashboard/all-users",
+    icon: Users,
+  },
+  {
+    label: "Individuals",
+    path: "/dashboard/individuals",
+    icon: User,
+  },
+  {
+    label: "Groups",
+    path: "/dashboard/groups",
+    icon: UsersRound,
+  },
+  {
+    label: "Professional Requests",
+    path: "/dashboard/professionals-requests",
+    icon: BadgeCheck,
+  },
+  {
+    label: "Subscription Statistics",
+    path: "/dashboard/subscription-statistics",
+    icon: BarChart3,
+  },
+  {
+    label: "Subscription Plans",
+    path: "/dashboard/subscription-plans",
+    icon: CreditCard,
+  },
+];
 
   const handleLogout = async () => {
     dispatch(logout());
