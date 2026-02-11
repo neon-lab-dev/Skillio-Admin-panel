@@ -21,19 +21,6 @@ const OverviewCard = ({ isLoading, data }: any) => {
           <Icon className={`h-6 w-6 ${data.color}`} />
         </div>
       </div>
-
-      {data.trendLabel && !isLoading && (
-        <div className="mt-4 flex items-center">
-          <span className="text-xs font-medium text-gray-500">
-            {data.trendLabel}
-          </span>
-          {data.trend && (
-            <span className="ml-2 px-2 py-1 text-xs font-medium bg-amber-100 text-amber-800 rounded-full">
-              {data.trend}
-            </span>
-          )}
-        </div>
-      )}
     </div>
   );
 };
