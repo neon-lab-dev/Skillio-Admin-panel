@@ -1,13 +1,11 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { LogOut } from "lucide-react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { logout, useCurrentUser } from "../../redux/Features/Auth/authSlice";
+import { logout } from "../../redux/Features/Auth/authSlice";
 
 export function DashboardHeader() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const user = useSelector(useCurrentUser) as any;
 
   const handleLogout = async () => {
     dispatch(logout());
@@ -27,7 +25,7 @@ export function DashboardHeader() {
               </span>
             </h1>
             <div className="text-neutral-700 dark:text-gray-200 capitalize bg-green-100/50 w-fit px-3 py-1 rounded-lg text-sm">
-              {user?.role}
+              Admin
             </div>
           </div>
 
