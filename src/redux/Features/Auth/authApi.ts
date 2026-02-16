@@ -1,18 +1,32 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { baseApi } from "../../API/baseApi";
 
 const authApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
 
-    getAllUsers: builder.query({
-      query: () => {
-        return {
-          url: `/user`,
-          method: "GET",
-          credentials: "include",
-        };
-      },
-      providesTags: ["users"],
-    }),
+    // In your authApi.ts file
+getAllUsers: builder.query({
+  query: (params) => {
+    const queryParams: Record<string, any> = {};
+    
+    if (params) {
+      Object.keys(params).forEach(key => {
+        if (params[key] !== undefined && params[key] !== null && params[key] !== '') {
+          // Keep numbers as numbers, strings as strings
+          queryParams[key] = params[key];
+        }
+      });
+    }
+    
+    return {
+      url: `/profile`,
+      method: "GET",
+      params: queryParams, // Use params option instead of building URL string
+      credentials: "include",
+    };
+  },
+  providesTags: ["users"],
+}),
 
     getSingleUserById: builder.query({
       query: (id) => {
@@ -28,7 +42,7 @@ const authApi = baseApi.injectEndpoints({
 
     login: builder.mutation({
       query: (userInfo) => ({
-        url: "/auth/login",
+        url: "/profile/login",
         method: "POST",
         body: userInfo,
       }),

@@ -8,8 +8,8 @@ import { useLoginMutation } from "../../redux/Features/Auth/authApi";
 import TextInput from "../../components/reusable/TextInput/TextInput";
 
 type FormValues = {
-  email: string;
-  password: string;
+  credential: string;
+  pin: string;
 };
 
 const Login = () => {
@@ -25,19 +25,19 @@ const Login = () => {
 
   const handleLogin: SubmitHandler<FormValues> = async (data) => {
     const loginData = {
-      email: data.email,
-      password: data.password,
+      credential: data.credential,
+      pin: data.pin,
     };
     try {
       const res = await login(loginData).unwrap();
       reset();
-      const user = res.data.user;
+      const user = res.data.profile;
       const token = res.data.accessToken;
       toast.success("Logged in successfully.");
 
       // Setting the user in Redux state
       dispatch(setUser({ user, token }));
-      navigate("/dashboard/messages");
+      navigate("/dashboard");
     } catch (err: any) {
       console.log(err);
       toast.error( "Invalid email or password!");
@@ -55,18 +55,18 @@ const Login = () => {
         </h1>
         <div className="space-y-4">
           <TextInput
-            label="Email"
-            placeholder="Enter your email"
-            {...register("email", { required: "Email is required" })}
-            error={errors.email}
+            label="Credential"
+            placeholder="Enter credential"
+            {...register("credential", { required: "This field is required" })}
+            error={errors.credential}
           />
 
           <TextInput
-            label="Password"
+            label="PIN"
             type={"password"}
-            placeholder="Enter your password"
-            {...register("password", { required: "Password is required" })}
-            error={errors.password}
+            placeholder="Enter your pin"
+            {...register("pin", { required: "Pin is required" })}
+            error={errors.pin}
           />
         </div>
 

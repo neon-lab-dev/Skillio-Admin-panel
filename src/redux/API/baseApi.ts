@@ -8,7 +8,7 @@ import type { RootState } from "../store";
 import type { BaseQueryApi, BaseQueryFn, FetchArgs } from "@reduxjs/toolkit/query";
 import type { DefinitionType } from "@reduxjs/toolkit/query";
 
-export const baseUrl = "https://skillio-app-server.onrender.com";
+export const baseUrl = "http://13.205.140.174";
 // export const baseUrl = "http://localhost:5000";
 
 const baseQuery = fetchBaseQuery({
@@ -18,7 +18,7 @@ const baseQuery = fetchBaseQuery({
     const token = (getState() as RootState).auth.token;
 
     if (token) {
-      headers.set("authorization", `${token}`);
+      headers.set("authorization", `Bearer ${token}`);
     }
     return headers;
   },
@@ -33,6 +33,7 @@ const baseQueryWithRefreshToken: BaseQueryFn<
 
   if (result.error?.status === 401) {
     const res = await fetch(`${baseUrl}/api/v1/auth/refresh-token`, {
+      method: "POST", // Added method
       credentials: "include",
     });
 
