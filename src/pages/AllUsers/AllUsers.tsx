@@ -18,7 +18,7 @@ const AllUsers = () => {
   });
 
   const { data, isLoading } = useGetAllUsersQuery(filters);
-
+console.log(data?.data?.items);
   // Clean phone number for API (remove + and %2B)
   useEffect(() => {
     if (filters.phoneNumber) {
