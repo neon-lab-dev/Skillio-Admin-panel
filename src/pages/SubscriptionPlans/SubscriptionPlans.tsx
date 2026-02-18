@@ -1,9 +1,44 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useGetAllSubscriptionsQuery } from "../../redux/Features/SubscriptionPlans/subscriptionPlansApi";
+import {
+  useCreateSubscriptionPlanMutation,
+  useGetAllSubscriptionsQuery,
+  useUpdateSubscriptionPlanMutation,
+} from "../../redux/Features/SubscriptionPlans/subscriptionPlansApi";
 import Table from "../../components/reusable/Table/Table";
+import Modal from "../../components/reusable/Modal/Modal";
+import Loader from "../../components/shared/Loader/Loader";
+import TextInput from "../../components/reusable/TextInput/TextInput";
+import Textarea from "../../components/reusable/TextArea/TextArea";
+import Button from "../../components/reusable/Button/Button";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import SelectDropdown from "../../components/reusable/SelectDropdown/SelectDropdown";
+import toast from "react-hot-toast";
 
+type TFormData = {
+  code: string;
+  description: string;
+  type: "SUBSCRIPTION" | "ADD_ON";
+  priceInPaise: number;
+  status: "DRAFT" | "COMPLETE";
+};
 const SubscriptionPlans = () => {
   const { data, isLoading } = useGetAllSubscriptionsQuery({});
+  const [createSubscriptionPlan, { isLoading: isCreatingNewPlan }] =
+    useCreateSubscriptionPlanMutation();
+  const [updateSubscriptionPlan, { isLoading: isUpdatingPlan }] =
+    useUpdateSubscriptionPlanMutation();
+  const [modalType, setModalType] = useState<string>("add");
+  const [selectedPlanId, setSelectedPlanId] = useState<string | null>(null);
+  const [isAddPlanModalOpen, setIsAddPlanModalOpen] = useState<boolean>(false);
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    setValue,
+    formState: { errors },
+  } = useForm<TFormData>();
 
   const columns: any = [
     {
@@ -73,7 +108,7 @@ const SubscriptionPlans = () => {
       render: (item: any) => (
         <button
           onClick={() => handleUpdate(item)}
-          className="px-3 py-1 text-sm bg-blue-600 text-white rounded hover:bg-blue-700"
+          className="px-3 py-1 text-sm bg-blue-600 text-white rounded hover:bg-blue-700 cursor-pointer"
         >
           Update
         </button>
@@ -81,20 +116,77 @@ const SubscriptionPlans = () => {
     },
   ];
 
+  console.log(data);
+
+  const handleAddOrUpdatePlan = async (
+    data: TFormData,
+    action: "add" | "update",
+  ) => {
+    try {
+      const basePayload = {
+        code: data.code,
+        description: data.description,
+        type: data.type,
+        priceInPaise: data.priceInPaise * 100,
+        status: data.status,
+      };
+
+      let response;
+
+      if (action === "add") {
+        response = await createSubscriptionPlan(basePayload).unwrap();
+      } else {
+        response = await updateSubscriptionPlan({
+          id: selectedPlanId,
+          ...basePayload,
+        }).unwrap();
+      }
+
+      if (response?.status === 200 || response?.status === 201) {
+        toast.success(response.message);
+        setIsAddPlanModalOpen(false);
+        reset();
+        setSelectedPlanId(null);
+        setModalType("add");
+      }
+    } catch (error: any) {
+      toast.error(error?.data?.message || "Something went wrong");
+    }
+  };
+
   const handleUpdate = (item: any) => {
-    console.log("Update clicked:", item);
-    // Navigate to edit page or open modal
-    // Example:
-    // navigate(`/subscription-plans/edit/${item.id}`);
+    setModalType("update");
+    setSelectedPlanId(item.id);
+    setIsAddPlanModalOpen(true);
+
+    setValue("code", item.code);
+    setValue("description", item.description);
+    setValue("type", item.type);
+    setValue("priceInPaise", item.priceInPaise / 100);
+    setValue("status", item.status);
   };
 
   return (
     <div>
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Subscription Plans</h1>
-        <p className="text-sm text-gray-600 mt-1">
-          Manage subscription plans in the system
-        </p>
+      <div className="mb-6 flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900">
+            Subscription Plans
+          </h1>
+          <p className="text-sm text-gray-600 mt-1">
+            Manage subscription plans in the system
+          </p>
+        </div>
+
+        <button
+          onClick={() => {
+            setModalType("add");
+            setIsAddPlanModalOpen(true);
+          }}
+          className="group relative py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+        >
+          Add New Plan
+        </button>
       </div>
 
       <Table
@@ -103,6 +195,102 @@ const SubscriptionPlans = () => {
         totalItems={data?.data?.total}
         isLoading={isLoading}
       />
+
+      <Modal
+        isModalOpen={isAddPlanModalOpen}
+        setIsModalOpen={setIsAddPlanModalOpen}
+        heading={`${modalType === "add" ? "Add" : "Update"} Notice`}
+      >
+        <div className="relative">
+          {isLoading && (
+            <div className="absolute inset-0 flex flex-col items-center justify-center backdrop-blur-[2px] bg-white/30 z-50">
+              <Loader size="lg" />
+            </div>
+          )}
+
+          <form
+            onSubmit={handleSubmit((data) =>
+              handleAddOrUpdatePlan(data, modalType as "add" | "update"),
+            )}
+            className="flex flex-col gap-6 font-Nunito mt-5"
+          >
+            <div className="flex flex-col gap-6">
+              {/* Plan Code */}
+              <TextInput
+                label="Plan Code"
+                placeholder="Enter plan code (e.g. GOLD_PLAN)"
+                error={errors.code}
+                {...register("code", { required: "Plan code is required" })}
+              />
+
+              {/* Description */}
+              <Textarea
+                label="Description"
+                placeholder="Enter plan description"
+                error={errors.description}
+                {...register("description", {
+                  required: "Description is required",
+                })}
+              />
+
+              {/* Plan Type */}
+              <SelectDropdown
+                label="Plan Type"
+                options={[
+                  { label: "Subscription", value: "SUBSCRIPTION" },
+                  { label: "Addons", value: "ADD_ON" },
+                ]}
+                error={errors.type}
+                {...register("type", { required: "Plan type is required" })}
+              />
+
+              {/* Price (in ₹, convert to paise in submit) */}
+              <TextInput
+                label="Price (₹)"
+                type="number"
+                placeholder="Enter price (e.g. 199)"
+                error={errors.priceInPaise}
+                {...register("priceInPaise", {
+                  required: "Price is required",
+                  valueAsNumber: true,
+                })}
+              />
+
+              {/* Status */}
+              <SelectDropdown
+                label="Status"
+                options={[
+                  { label: "Draft", value: "DRAFT" },
+                  { label: "Complete", value: "COMPLETE" },
+                ]}
+                error={errors.status}
+                {...register("status", { required: "Status is required" })}
+              />
+            </div>
+
+            <div className="flex gap-3 justify-end">
+              <Button
+                type="button"
+                label={"Cancel"}
+                variant="secondary"
+                className="py-[7px] lg:py-[7px] w-full md:w-fit"
+                onClick={() => {
+                  setIsAddPlanModalOpen(false);
+                  setModalType("add");
+                }}
+              />
+              <Button
+                type="submit"
+                label={modalType === "add" ? "Add Plan" : "Update Plan"}
+                variant="primary"
+                isLoading={
+                  modalType === "add" ? isCreatingNewPlan : isUpdatingPlan
+                }
+              />
+            </div>
+          </form>
+        </div>
+      </Modal>
     </div>
   );
 };

@@ -61,6 +61,7 @@ const Table = <T extends Record<string, any>>({
   const [showFilters, setShowFilters] = useState(false);
 
   const totalPages = Math.ceil(totalItems / currentLimit);
+  console.log(totalPages);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -292,7 +293,7 @@ const Table = <T extends Record<string, any>>({
             <button
               disabled={page === totalPages}
               onClick={() => onPageChange?.(page + 1)}
-              className="px-3 py-1 border rounded-md text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+              className="px-3 py-1 border rounded-md text-sm disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 cursor-pointer"
             >
               Next
             </button>

@@ -4,7 +4,7 @@ import type { FieldError, FieldErrorsImpl, Merge } from "react-hook-form";
 
 interface DropdownProps {
   label: string;
-  options: string[];
+  options: { value: string; label: string }[];
   error?: FieldError | Merge<FieldError, FieldErrorsImpl<any>>;
   isRequired?: boolean;
   selected?: boolean;
@@ -28,7 +28,7 @@ const SelectDropdown = forwardRef<HTMLSelectElement, DropdownProps>(
           required={isRequired}
           disabled={isDisabled}
           className={`px-[18px] py-[14px] rounded-lg bg-neutral-70 border text-neutral-65 focus:outline-none focus:border-primary-10 transition duration-300 ${
-            error ? "border-red-500" : "border-neutral-75"
+            error ? "border-red-500" : "border-gray-200"
           }`}
           {...rest}
         >
@@ -36,8 +36,8 @@ const SelectDropdown = forwardRef<HTMLSelectElement, DropdownProps>(
             Select {label}
           </option>
           {options.map((option, index) => (
-            <option key={index} value={option} className="capitalize">
-              {option}
+            <option key={index} value={option?.value} className="capitalize">
+              {option?.label}
             </option>
           ))}
         </select>

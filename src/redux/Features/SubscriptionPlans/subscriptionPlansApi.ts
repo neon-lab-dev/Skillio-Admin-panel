@@ -49,14 +49,14 @@ const subscriptionPlansApi = baseApi.injectEndpoints({
       invalidatesTags: ["subscriptionPlan"],
     }),
 
-    // deleteAyurveda: builder.mutation({
-    //   query: (id) => ({
-    //     url: `/ayurveda/delete/${id}`,
-    //     method: "DELETE",
-    //     credentials: "include",
-    //   }),
-    //   invalidatesTags: ["ayurveda"],
-    // }),
+    deleteSubscriptionPlan: builder.mutation({
+      query: (id) => ({
+        url: `/plan-master/${id}`,
+        method: "DELETE",
+        credentials: "include",
+      }),
+      invalidatesTags: ["subscriptionPlan"],
+    }),
   }),
 });
 
@@ -65,4 +65,5 @@ export const {
   useGetSingleSubscriptionQuery,
   useCreateSubscriptionPlanMutation,
   useUpdateSubscriptionPlanMutation,
+  useDeleteSubscriptionPlanMutation,
 } = subscriptionPlansApi;
