@@ -138,15 +138,6 @@ const AllUsers = () => {
         { value: "SKILLED", label: "Skilled" },
       ],
     },
-    {
-      key: "country",
-      label: "Country",
-      options: [
-        { value: "India", label: "India" },
-        { value: "Nepal", label: "Nepal" },
-        // Add more countries as needed
-      ],
-    },
   ];
 
   const handleSearch = (searchTerm: string) => {
