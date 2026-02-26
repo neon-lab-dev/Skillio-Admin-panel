@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   useCreateSubscriptionPlanMutation,
+  useDeleteSubscriptionPlanMutation,
   useGetAllSubscriptionsQuery,
   useUpdateSubscriptionPlanMutation,
 } from "../../redux/Features/SubscriptionPlans/subscriptionPlansApi";
@@ -14,6 +15,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import SelectDropdown from "../../components/reusable/SelectDropdown/SelectDropdown";
 import toast from "react-hot-toast";
+import { FiEdit, FiTrash2 } from "react-icons/fi";
 
 type TFormData = {
   code: string;
@@ -28,6 +30,7 @@ const SubscriptionPlans = () => {
     useCreateSubscriptionPlanMutation();
   const [updateSubscriptionPlan, { isLoading: isUpdatingPlan }] =
     useUpdateSubscriptionPlanMutation();
+  const [deleteSubscriptionPlan] = useDeleteSubscriptionPlanMutation();
   const [modalType, setModalType] = useState<string>("add");
   const [selectedPlanId, setSelectedPlanId] = useState<string | null>(null);
   const [isAddPlanModalOpen, setIsAddPlanModalOpen] = useState<boolean>(false);
@@ -106,12 +109,25 @@ const SubscriptionPlans = () => {
       key: "actions",
       header: "Actions",
       render: (item: any) => (
-        <button
-          onClick={() => handleUpdate(item)}
-          className="px-3 py-1 text-sm bg-blue-600 text-white rounded hover:bg-blue-700 cursor-pointer"
-        >
-          Update
-        </button>
+        <div className="flex items-center gap-3">
+          {/* Update */}
+          <button
+            onClick={() => handleUpdate(item)}
+            className="p-2 rounded-md bg-blue-100 text-blue-600 hover:bg-blue-200 transition cursor-pointer"
+            title="Update"
+          >
+            <FiEdit size={16} />
+          </button>
+
+          {/* Delete */}
+          <button
+            onClick={() => handleDeletePlan(item?.id)}
+            className="p-2 rounded-md bg-red-100 text-red-600 hover:bg-red-200 transition cursor-pointer"
+            title="Delete"
+          >
+            <FiTrash2 size={16} />
+          </button>
+        </div>
       ),
     },
   ];
@@ -164,6 +180,22 @@ const SubscriptionPlans = () => {
     setValue("type", item.type);
     setValue("priceInPaise", item.priceInPaise / 100);
     setValue("status", item.status);
+  };
+
+  const handleDeletePlan = async (id: string) => {
+    try {
+      const payload = {
+        ids: [id],
+        "hard": false
+      };
+      await toast.promise(deleteSubscriptionPlan(payload).unwrap(), {
+        loading: "Loading...",
+        success: "Plan deleted successfully!",
+        error: "Failed to delete plan. Please try again.",
+      });
+    } catch (err) {
+      console.error("Error deleting plan:", err);
+    }
   };
 
   return (

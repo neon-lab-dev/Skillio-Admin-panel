@@ -50,9 +50,10 @@ const subscriptionPlansApi = baseApi.injectEndpoints({
     }),
 
     deleteSubscriptionPlan: builder.mutation({
-      query: (id) => ({
-        url: `/plan-master/${id}`,
+      query: (data) => ({
+        url: `/plan-master/delete`,
         method: "DELETE",
+        body: data,
         credentials: "include",
       }),
       invalidatesTags: ["subscriptionPlan"],

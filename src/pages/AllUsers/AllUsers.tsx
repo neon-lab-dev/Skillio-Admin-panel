@@ -3,8 +3,10 @@
 import { useState, useEffect } from "react";
 import { useGetAllUsersQuery } from "../../redux/Features/Auth/authApi";
 import Table from "../../components/reusable/Table/Table";
+import { useNavigate } from "react-router-dom";
 
 const AllUsers = () => {
+  const navigate = useNavigate();
   const [filters, setFilters] = useState({
     page: 1,
     perPage: 10,
@@ -30,14 +32,14 @@ const AllUsers = () => {
     {
       key: "nickName",
       header: "Nickname",
-      render: (item : any) => (
+      render: (item: any) => (
         <div className="font-medium text-gray-900">{item.nickName || "-"}</div>
       ),
     },
     {
       key: "firstName",
       header: "Name",
-      render: (item : any) => (
+      render: (item: any) => (
         <div>
           {item.firstName} {item.lastName}
         </div>
@@ -46,14 +48,14 @@ const AllUsers = () => {
     {
       key: "email",
       header: "Email",
-      render: (item : any) => (
+      render: (item: any) => (
         <div>{item.email && item.email.length > 0 ? item.email[0] : "-"}</div>
       ),
     },
     {
       key: "phoneNumber",
       header: "Phone",
-      render: (item : any) => (
+      render: (item: any) => (
         <div>
           {item.phoneNumber &&
           item.phoneNumber.length > 0 &&
@@ -66,7 +68,7 @@ const AllUsers = () => {
     {
       key: "profileType",
       header: "Profile Type",
-      render: (item : any) => (
+      render: (item: any) => (
         <span
           className={`px-2 py-1 text-xs rounded-full ${
             item.profileType === "INDIVIDUAL"
@@ -103,6 +105,18 @@ const AllUsers = () => {
         >
           {item.status}
         </span>
+      ),
+    },
+    {
+      key: "actions",
+      header: "Actions",
+      render: (item: any) => (
+        <button
+          onClick={() => navigate(`/dashboard/user/${item.id}`)}
+          className="px-3 py-1 text-sm bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition cursor-pointer"
+        >
+          View Details
+        </button>
       ),
     },
   ];
@@ -163,7 +177,6 @@ const AllUsers = () => {
       page: 1, // Reset to first page on limit change
     }));
   };
-
 
   return (
     <div className="">

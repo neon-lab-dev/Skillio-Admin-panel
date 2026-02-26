@@ -12,6 +12,7 @@ import Groups from "../pages/Groups/Groups";
 import ProfessionalsRequests from "../pages/ProfessionalsRequests/ProfessionalsRequests";
 import SubscriptionStatistics from "../pages/SubscriptionStatistics/SubscriptionStatistics";
 import SubscriptionPlans from "../pages/SubscriptionPlans/SubscriptionPlans";
+import UserDetails from "../pages/AllUsers/UserDetails";
 
 export const router = createBrowserRouter([
   {
@@ -39,6 +40,10 @@ export const router = createBrowserRouter([
       {
         path: "all-users",
         element: <AllUsers />,
+      },
+      {
+        path: "user/:id",
+        element: <UserDetails />,
       },
       {
         path: "individuals",

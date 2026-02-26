@@ -5,33 +5,33 @@ const authApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
 
     // In your authApi.ts file
-getAllUsers: builder.query({
-  query: (params) => {
-    const queryParams: Record<string, any> = {};
-    
-    if (params) {
-      Object.keys(params).forEach(key => {
-        if (params[key] !== undefined && params[key] !== null && params[key] !== '') {
-          // Keep numbers as numbers, strings as strings
-          queryParams[key] = params[key];
+    getAllUsers: builder.query({
+      query: (params) => {
+        const queryParams: Record<string, any> = {};
+
+        if (params) {
+          Object.keys(params).forEach(key => {
+            if (params[key] !== undefined && params[key] !== null && params[key] !== '') {
+              // Keep numbers as numbers, strings as strings
+              queryParams[key] = params[key];
+            }
+          });
         }
-      });
-    }
-    
-    return {
-      url: `/profile`,
-      method: "GET",
-      params: queryParams, // Use params option instead of building URL string
-      credentials: "include",
-    };
-  },
-  providesTags: ["users"],
-}),
+
+        return {
+          url: `/profile`,
+          method: "GET",
+          params: queryParams, // Use params option instead of building URL string
+          credentials: "include",
+        };
+      },
+      providesTags: ["users"],
+    }),
 
     getSingleUserById: builder.query({
       query: (id) => {
         return {
-          url: `/user/${id}`,
+          url: `/profile/full/${id}`,
           method: "GET",
           credentials: "include",
         };
@@ -69,7 +69,7 @@ getAllUsers: builder.query({
     }),
 
     resetPassword: builder.mutation({
-      query: ({resetPasswordData, token}) => ({
+      query: ({ resetPasswordData, token }) => ({
         url: `/auth/reset-password/${token}`,
         method: "POST",
         body: resetPasswordData,
