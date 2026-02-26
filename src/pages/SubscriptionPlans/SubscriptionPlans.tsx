@@ -46,6 +46,13 @@ const SubscriptionPlans = () => {
 
   const columns: any = [
     {
+      key: "priority",
+      header: "Priority",
+      render: (item: any) => (
+        <div className="font-medium text-gray-900">{item.priority}</div>
+      ),
+    },
+    {
       key: "code",
       header: "Plan Code",
       render: (item: any) => (
@@ -91,21 +98,21 @@ const SubscriptionPlans = () => {
         );
       },
     },
-    {
-      key: "active",
-      header: "Active",
-      render: (item: any) => (
-        <span
-          className={`px-2 py-1 text-xs rounded-full ${
-            item.active
-              ? "bg-green-100 text-green-800"
-              : "bg-red-100 text-red-800"
-          }`}
-        >
-          {item.active ? "Yes" : "No"}
-        </span>
-      ),
-    },
+    // {
+    //   key: "active",
+    //   header: "Active",
+    //   render: (item: any) => (
+    //     <span
+    //       className={`px-2 py-1 text-xs rounded-full ${
+    //         item.active
+    //           ? "bg-green-100 text-green-800"
+    //           : "bg-red-100 text-red-800"
+    //       }`}
+    //     >
+    //       {item.active ? "Yes" : "No"}
+    //     </span>
+    //   ),
+    // },
     {
       key: "actions",
       header: "Actions",
@@ -144,7 +151,7 @@ const SubscriptionPlans = () => {
         type: data.type,
         priceInPaise: data.priceInPaise * 100,
         status: data.status,
-        // priority : data.priority
+        priority : data.priority
       };
 
       let response;
@@ -180,6 +187,7 @@ const SubscriptionPlans = () => {
     setValue("type", item.type);
     setValue("priceInPaise", item.priceInPaise / 100);
     setValue("status", item.status);
+    setValue("priority", item.priority);
   };
 
   const handleDeletePlan = async (id: string) => {
