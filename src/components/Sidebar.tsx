@@ -4,7 +4,6 @@ import {
   User,
   UsersRound,
   BadgeCheck,
-  BarChart3,
   CreditCard,
   FileText,
   LogOut,
@@ -50,11 +49,11 @@ export function Sidebar() {
     path: "/dashboard/professionals-requests",
     icon: BadgeCheck,
   },
-  {
-    label: "Subscription Statistics",
-    path: "/dashboard/subscription-statistics",
-    icon: BarChart3,
-  },
+  // {
+  //   label: "Subscription Statistics",
+  //   path: "/dashboard/subscription-statistics",
+  //   icon: BarChart3,
+  // },
   {
     label: "Subscription Plans",
     path: "/dashboard/subscription-plans",

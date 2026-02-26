@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
-import { useGetAllPostsQuery, useGetDocumentByIdQuery } from "../../redux/Features/Post/postApi";
+import { useGetAllPostsQuery } from "../../redux/Features/Post/postApi";
 import Table from "../../components/reusable/Table/Table";
 
 const Posts = () => {
@@ -9,10 +9,8 @@ const Posts = () => {
     perPage: 10,
     mediaType: "post",
   });
-  const [documentId, setDocumentId] = useState<string | null>(null);
 
   const { data, isLoading } = useGetAllPostsQuery(filters);
-  const { data: documentData, isLoading: isDocumentLoading } = useGetDocumentByIdQuery({ id: documentId });
 
   // Table Columns
   const columns: any = [
@@ -45,9 +43,8 @@ const Posts = () => {
     {
       key: "action",
       header: "Action",
-      render: (item: any) => (
+      render: () => (
         <button
-          onClick={() => setDocumentId(item?._id)}
           className="px-3 py-1 text-sm rounded-md bg-blue-600 text-white hover:bg-blue-700 transition cursor-pointer"
         >
           View Details

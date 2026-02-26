@@ -52,7 +52,7 @@ const subscriptionPlansApi = baseApi.injectEndpoints({
     deleteSubscriptionPlan: builder.mutation({
       query: (data) => ({
         url: `/plan-master/delete`,
-        method: "DELETE",
+        method: "POST",
         body: data,
         credentials: "include",
       }),

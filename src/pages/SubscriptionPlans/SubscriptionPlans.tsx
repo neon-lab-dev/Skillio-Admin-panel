@@ -18,6 +18,7 @@ import toast from "react-hot-toast";
 import { FiEdit, FiTrash2 } from "react-icons/fi";
 
 type TFormData = {
+  priority: number | any;
   code: string;
   description: string;
   type: "SUBSCRIPTION" | "ADD_ON";
@@ -132,8 +133,6 @@ const SubscriptionPlans = () => {
     },
   ];
 
-  console.log(data);
-
   const handleAddOrUpdatePlan = async (
     data: TFormData,
     action: "add" | "update",
@@ -145,6 +144,7 @@ const SubscriptionPlans = () => {
         type: data.type,
         priceInPaise: data.priceInPaise * 100,
         status: data.status,
+        // priority : data.priority
       };
 
       let response;
@@ -186,13 +186,15 @@ const SubscriptionPlans = () => {
     try {
       const payload = {
         ids: [id],
-        "hard": false
+        "hard": true
       };
       await toast.promise(deleteSubscriptionPlan(payload).unwrap(), {
         loading: "Loading...",
         success: "Plan deleted successfully!",
         error: "Failed to delete plan. Please try again.",
       });
+
+      window.location.reload();
     } catch (err) {
       console.error("Error deleting plan:", err);
     }
@@ -226,6 +228,7 @@ const SubscriptionPlans = () => {
         data={data?.data?.items || []}
         totalItems={data?.data?.total}
         isLoading={isLoading}
+        page={data?.data?.page || 1}
       />
 
       <Modal
@@ -247,6 +250,13 @@ const SubscriptionPlans = () => {
             className="flex flex-col gap-6 font-Nunito mt-5"
           >
             <div className="flex flex-col gap-6">
+              {/* Priority */}
+              <TextInput
+                label="Priority"
+                placeholder="Enter priority (e.g. 1)"
+                error={errors.priority}
+                {...register("priority", { required: "Priority is required" })}
+              />
               {/* Plan Code */}
               <TextInput
                 label="Plan Code"

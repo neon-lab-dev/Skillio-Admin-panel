@@ -44,8 +44,8 @@ interface ReusableTableProps<T> {
 const Table = <T extends Record<string, any>>({
   columns,
   data,
-  page = 1,
-  onPageChange,
+  // page = 1,
+  // onPageChange,
   actions,
   onLimitChange,
   onSearch,
@@ -258,7 +258,7 @@ const Table = <T extends Record<string, any>>({
       </div>
 
       {/* Pagination */}
-      {totalItems > 0 && totalPages > 1 && (
+      {/* {totalItems > 0 && totalPages > 1 && (
         <div className="mt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="text-sm text-gray-600">
             Showing {(page - 1) * currentLimit + 1} to{" "}
@@ -299,7 +299,7 @@ const Table = <T extends Record<string, any>>({
             </button>
           </div>
         </div>
-      )}
+      )} */}
     </div>
   );
 };
