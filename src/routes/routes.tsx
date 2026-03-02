@@ -13,6 +13,7 @@ import ProfessionalsRequests from "../pages/ProfessionalsRequests/ProfessionalsR
 import SubscriptionStatistics from "../pages/SubscriptionStatistics/SubscriptionStatistics";
 import SubscriptionPlans from "../pages/SubscriptionPlans/SubscriptionPlans";
 import UserDetails from "../pages/AllUsers/UserDetails";
+import UserPosts from "../pages/UserPosts/UserPosts";
 
 export const router = createBrowserRouter([
   {
@@ -36,6 +37,10 @@ export const router = createBrowserRouter([
       {
         path: "posts",
         element: <Posts />,
+      },
+      {
+        path: "user-posts/:id",
+        element: <UserPosts />,
       },
       {
         path: "all-users",

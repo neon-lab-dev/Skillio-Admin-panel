@@ -1,21 +1,62 @@
 /* eslint-disable react-hooks/set-state-in-effect */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useGetAllPostsQuery } from "../../redux/Features/Post/postApi";
 import Table from "../../components/reusable/Table/Table";
 import PostMediaModal from "../../components/PostsPage/PostMediaModal/PostMediaModal";
 import { useGetDocumentsByIdsQuery } from "../../redux/Features/Document/documentApi";
+import { useGetUserByIdsQuery } from "../../redux/Features/User/userApi";
+import { Link } from "react-router-dom";
+import PostTable from "../../components/reusable/PostTable/PostTable";
 
 const Posts = () => {
   const [selectedDocumentIds, setSelectedDocumentIds] = useState<string[]>([]);
   const [documents, setDocuments] = useState<any[]>([]);
   const [isMediaModalOpen, setIsMediaModalOpen] = useState<boolean>(false);
+
   const [filters, setFilters] = useState({
     page: 1,
     perPage: 10,
     mediaType: "post",
   });
 
+  /* ================================
+      GET ALL POSTS
+  =================================== */
+  const { data, isLoading } = useGetAllPostsQuery(filters);
+
+  const posts = data?.data || [];
+
+  /* ================================
+      EXTRACT UNIQUE USER IDS
+  =================================== */
+  const userIds = useMemo(() => {
+    return Array.from(new Set(posts.map((post: any) => post?.userReferenceId)));
+  }, [posts]);
+
+  /* ================================
+      FETCH USERS BY IDS
+  =================================== */
+  const { data: userData } = useGetUserByIdsQuery(userIds, {
+    skip: userIds.length === 0,
+  });
+
+  /* ================================
+      CREATE USERS MAP FOR FAST LOOKUP
+  =================================== */
+  const usersMap = useMemo(() => {
+    const map: Record<string, any> = {};
+
+    userData?.data?.items?.forEach((user: any) => {
+      map[user.id] = user; // IMPORTANT: match with userReferenceId
+    });
+
+    return map;
+  }, [userData]);
+
+  /* ================================
+      FETCH DOCUMENTS FOR MODAL
+  =================================== */
   const {
     data: documentData,
     isLoading: isDocumentLoading,
@@ -24,13 +65,6 @@ const Posts = () => {
     skip: !isMediaModalOpen || selectedDocumentIds.length === 0,
   });
 
-  const handleCloseModal = () => {
-    setSelectedDocumentIds([]);
-    setDocuments([]);
-    setIsMediaModalOpen(false);
-  };
-
-  // Refetch when modal opens with new ids
   useEffect(() => {
     if (isMediaModalOpen && selectedDocumentIds.length > 0) {
       refetch();
@@ -41,9 +75,13 @@ const Posts = () => {
     setDocuments(documentData?.data || []);
   }, [documentData]);
 
-  const { data, isLoading } = useGetAllPostsQuery(filters);
+  const handleCloseModal = () => {
+    setSelectedDocumentIds([]);
+    setDocuments([]);
+    setIsMediaModalOpen(false);
+  };
 
-  // Table Columns
+  // TABLE COLUMNS
   const columns: any = [
     {
       key: "description",
@@ -52,16 +90,41 @@ const Posts = () => {
         <div className="max-w-xs truncate">{item.description || "-"}</div>
       ),
     },
+
+    {
+      key: "user",
+      header: "Posted By",
+      render: (item: any) => {
+        const user = usersMap[item.userReferenceId];
+
+        if (!user) return "Loading...";
+
+        return (
+          <Link
+            to={`/dashboard/user-posts/${item.userReferenceId}`}
+            className="flex flex-col hover:underline"
+          >
+            <span className="font-medium text-gray-900">
+              {user.firstName || ""} {user.lastName || ""}
+            </span>
+            <span className="text-sm text-gray-500">@{user.nickName}</span>
+          </Link>
+        );
+      },
+    },
+
     {
       key: "totalComments",
       header: "Comments",
       render: (item: any) => item.totalComments ?? 0,
     },
+
     {
       key: "totalViews",
       header: "Views",
       render: (item: any) => item.totalViews ?? 0,
     },
+
     {
       key: "mediaType",
       header: "Type",
@@ -71,6 +134,7 @@ const Posts = () => {
         </span>
       ),
     },
+
     {
       key: "action",
       header: "Action",
@@ -78,7 +142,8 @@ const Posts = () => {
         <button
           type="button"
           onClick={() => {
-            setSelectedDocumentIds(item?.documentId);
+            // IMPORTANT FIX: wrap in array
+            setSelectedDocumentIds([item?.documentId]);
             setIsMediaModalOpen(true);
           }}
           className="px-3 py-1 text-sm rounded-md bg-blue-600 text-white hover:bg-blue-700 transition cursor-pointer"
@@ -89,6 +154,7 @@ const Posts = () => {
     },
   ];
 
+  // PAGINATION HANDLERS
   const handlePageChange = (newPage: number) => {
     setFilters((prev) => ({
       ...prev,
@@ -113,7 +179,7 @@ const Posts = () => {
 
       <Table
         columns={columns}
-        data={data?.data || []}
+        data={posts}
         page={filters.page}
         onPageChange={handlePageChange}
         onLimitChange={handleLimitChange}
@@ -123,7 +189,7 @@ const Posts = () => {
       />
 
       <PostMediaModal
-        documents={documents || []}
+        documents={documents}
         isLoading={isDocumentLoading}
         isModalOpen={isMediaModalOpen}
         setIsModalOpen={setIsMediaModalOpen}

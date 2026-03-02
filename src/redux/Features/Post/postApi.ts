@@ -12,9 +12,10 @@ const postApi = postBaseApi.injectEndpoints({
       providesTags: ["post"],
     }),
 
-    getDocumentById: builder.query({
-      query: (id) => ({
-        url: `/media/${id}`,
+    getAllPostByUserId: builder.query({
+      query: ({id, mediaType}) => ({
+        url: `/media/user/${id}`,
+        params: { mediaType },
         method: "GET",
       }),
       providesTags: ["post"],
@@ -23,4 +24,4 @@ const postApi = postBaseApi.injectEndpoints({
   }),
 });
 
-export const { useGetAllPostsQuery, useGetDocumentByIdQuery } = postApi;
+export const { useGetAllPostsQuery, useGetAllPostByUserIdQuery } = postApi;
