@@ -4,7 +4,7 @@ import {
 } from "@reduxjs/toolkit/query/react";
 import type { RootState } from "../store";
 
-export const postBaseUrl = "http://13.205.140.174/post";
+export const postBaseUrl = "https://skillioo.in/post";
 
 const postBaseQuery = fetchBaseQuery({
   baseUrl: `${postBaseUrl}/api/v1`,

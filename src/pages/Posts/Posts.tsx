@@ -1,14 +1,45 @@
+/* eslint-disable react-hooks/set-state-in-effect */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useGetAllPostsQuery } from "../../redux/Features/Post/postApi";
 import Table from "../../components/reusable/Table/Table";
+import PostMediaModal from "../../components/PostsPage/PostMediaModal/PostMediaModal";
+import { useGetDocumentsByIdsQuery } from "../../redux/Features/Document/documentApi";
 
 const Posts = () => {
+  const [selectedDocumentIds, setSelectedDocumentIds] = useState<string[]>([]);
+  const [documents, setDocuments] = useState<any[]>([]);
+  const [isMediaModalOpen, setIsMediaModalOpen] = useState<boolean>(false);
   const [filters, setFilters] = useState({
     page: 1,
     perPage: 10,
     mediaType: "post",
   });
+
+  const {
+    data: documentData,
+    isLoading: isDocumentLoading,
+    refetch,
+  } = useGetDocumentsByIdsQuery(selectedDocumentIds, {
+    skip: !isMediaModalOpen || selectedDocumentIds.length === 0,
+  });
+
+  const handleCloseModal = () => {
+    setSelectedDocumentIds([]);
+    setDocuments([]);
+    setIsMediaModalOpen(false);
+  };
+
+  // Refetch when modal opens with new ids
+  useEffect(() => {
+    if (isMediaModalOpen && selectedDocumentIds.length > 0) {
+      refetch();
+    }
+  }, [isMediaModalOpen, selectedDocumentIds, refetch]);
+
+  useEffect(() => {
+    setDocuments(documentData?.data || []);
+  }, [documentData]);
 
   const { data, isLoading } = useGetAllPostsQuery(filters);
 
@@ -43,8 +74,13 @@ const Posts = () => {
     {
       key: "action",
       header: "Action",
-      render: () => (
+      render: (item: any) => (
         <button
+          type="button"
+          onClick={() => {
+            setSelectedDocumentIds(item?.documentId);
+            setIsMediaModalOpen(true);
+          }}
           className="px-3 py-1 text-sm rounded-md bg-blue-600 text-white hover:bg-blue-700 transition cursor-pointer"
         >
           View Details
@@ -84,6 +120,14 @@ const Posts = () => {
         currentLimit={filters.perPage}
         totalItems={data?.data?.total || 0}
         isLoading={isLoading}
+      />
+
+      <PostMediaModal
+        documents={documents || []}
+        isLoading={isDocumentLoading}
+        isModalOpen={isMediaModalOpen}
+        setIsModalOpen={setIsMediaModalOpen}
+        handleCloseModal={handleCloseModal}
       />
     </div>
   );

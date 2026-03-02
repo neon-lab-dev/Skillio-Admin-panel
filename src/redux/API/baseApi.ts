@@ -8,7 +8,7 @@ import type { RootState } from "../store";
 import type { BaseQueryApi, BaseQueryFn, FetchArgs } from "@reduxjs/toolkit/query";
 import type { DefinitionType } from "@reduxjs/toolkit/query";
 
-export const baseUrl = "http://13.205.140.174/customer";
+export const baseUrl = "https://skillioo.in/customer";
 // export const baseUrl = "http://localhost:5000";
 
 const baseQuery = fetchBaseQuery({
@@ -56,7 +56,8 @@ export const baseApi = createApi({
   baseQuery: baseQueryWithRefreshToken,
   tagTypes: [
     "users",
-    "subscriptionPlan"
+    "subscriptionPlan",
+    "document",
   ],
   endpoints: () => ({}),
 });

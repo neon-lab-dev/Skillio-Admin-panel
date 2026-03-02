@@ -157,7 +157,7 @@ const PersonalInfo: React.FC<PersonalInfoProps> = ({ user }) => {
       </div>
 
       {/* Follows Status */}
-      {user.portfolio.follows && (
+      {/* {user.portfolio.follows && (
         <div className="flex items-start">
           <div className="w-8 flex-shrink-0">
             <FiUser className="w-4 h-4 text-gray-400 mt-0.5" />
@@ -167,7 +167,7 @@ const PersonalInfo: React.FC<PersonalInfoProps> = ({ user }) => {
             <p className="text-sm text-gray-900">{user.portfolio.follows}</p>
           </div>
         </div>
-      )}
+      )} */}
     </div>
   );
 };
