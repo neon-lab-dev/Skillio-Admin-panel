@@ -19,15 +19,17 @@ const userApi = baseApi.injectEndpoints({
       providesTags: ["users"],
     }),
 
-    // getDocumentById: builder.query({
-    //   query: (id) => ({
-    //     url: `/media/${id}`,
-    //     method: "GET",
-    //   }),
-    //   providesTags: ["post"],
-    // }),
+    updateProfileStatus: builder.mutation({
+      query: (data) => ({
+        url: `/profile/status`,
+        method: "PUT",
+        body: data,
+        credentials: "include",
+      }),
+      invalidatesTags: ["users"],
+    }),
 
   }),
 });
 
-export const { useGetUserByIdsQuery, useGetSingleUserByIdQuery } = userApi;
+export const { useGetUserByIdsQuery, useGetSingleUserByIdQuery, useUpdateProfileStatusMutation } = userApi;

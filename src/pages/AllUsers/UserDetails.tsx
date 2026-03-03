@@ -55,7 +55,7 @@ const UserDetails: React.FC = () => {
 
           <div className="px-6 py-5">
             {/* Profile Header */}
-            <ProfileHeader user={userData} />
+            <ProfileHeader userId={id as string} user={userData} />
 
             {/* Bio Section */}
             <Bio bio={userData.portfolio.bio} />
@@ -65,7 +65,7 @@ const UserDetails: React.FC = () => {
               <h3 className="text-sm font-medium text-gray-900 mb-3">
                 Personal Information
               </h3>
-              <PersonalInfo user={userData} />
+              <PersonalInfo  user={userData} />
             </div>
 
             {/* Hiring Rate Section */}

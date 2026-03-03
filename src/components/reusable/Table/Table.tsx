@@ -39,6 +39,7 @@ interface ReusableTableProps<T> {
   currentLimit?: number;
   totalItems?: number;
   isLoading?: boolean;
+  children?: React.ReactNode;
 }
 
 const Table = <T extends Record<string, any>>({
@@ -54,6 +55,7 @@ const Table = <T extends Record<string, any>>({
   currentLimit = 10,
   totalItems = 0,
   isLoading = false,
+  children,
 }: ReusableTableProps<T>) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
@@ -117,6 +119,10 @@ const Table = <T extends Record<string, any>>({
               ))}
             </select>
           </div>
+
+          {
+            children
+          }
 
           {/* Filter button */}
           {filterOptions && filterOptions.length > 0 && (

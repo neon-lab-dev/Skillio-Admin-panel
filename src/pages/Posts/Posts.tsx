@@ -7,7 +7,6 @@ import PostMediaModal from "../../components/PostsPage/PostMediaModal/PostMediaM
 import { useGetDocumentsByIdsQuery } from "../../redux/Features/Document/documentApi";
 import { useGetUserByIdsQuery } from "../../redux/Features/User/userApi";
 import { Link } from "react-router-dom";
-import PostTable from "../../components/reusable/PostTable/PostTable";
 
 const Posts = () => {
   const [selectedDocumentIds, setSelectedDocumentIds] = useState<string[]>([]);

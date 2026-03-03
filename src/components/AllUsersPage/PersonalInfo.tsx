@@ -1,16 +1,16 @@
 // components/user/PersonalInfo.tsx
-import React from 'react';
-import { 
-  FiCreditCard, 
-  FiCalendar, 
-  FiUser, 
-  FiBriefcase, 
-  FiStar, 
+import React from "react";
+import {
+  FiCreditCard,
+  FiCalendar,
+  FiUser,
+  FiBriefcase,
+  FiStar,
   FiActivity,
-  FiHash 
-} from 'react-icons/fi';
-import { formatDate } from '../../utils/user.utils';
-import type { UserProfile } from '../../types/user.types';
+  FiHash,
+} from "react-icons/fi";
+import { formatDate } from "../../utils/user.utils";
+import type { UserProfile } from "../../types/user.types";
 
 interface PersonalInfoProps {
   user: UserProfile;
@@ -19,16 +19,19 @@ interface PersonalInfoProps {
 const PersonalInfo: React.FC<PersonalInfoProps> = ({ user }) => {
   const getProficiencyBadge = (proficiency: string) => {
     const colors = {
-      'PROFESSIONAL': 'bg-purple-100 text-purple-800',
-      'AMATEUR': 'bg-blue-100 text-blue-800',
-      'BEGINNER': 'bg-green-100 text-green-800',
-      'EXPERT': 'bg-orange-100 text-orange-800'
+      PROFESSIONAL: "bg-purple-100 text-purple-800",
+      AMATEUR: "bg-blue-100 text-blue-800",
+      BEGINNER: "bg-green-100 text-green-800",
+      EXPERT: "bg-orange-100 text-orange-800",
     };
-    
-    const color = colors[proficiency as keyof typeof colors] || 'bg-gray-100 text-gray-800';
-    
+
+    const color =
+      colors[proficiency as keyof typeof colors] || "bg-gray-100 text-gray-800";
+
     return (
-      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${color}`}>
+      <span
+        className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${color}`}
+      >
         {proficiency}
       </span>
     );
@@ -36,6 +39,17 @@ const PersonalInfo: React.FC<PersonalInfoProps> = ({ user }) => {
 
   return (
     <div className="space-y-4">
+      {/* Status */}
+      <div className="flex items-start">
+        <div className="w-8 flex-shrink-0">
+          <FiCalendar className="w-4 h-4 text-gray-400 mt-0.5" />
+        </div>
+        <div className="flex-1">
+          <p className="text-xs text-gray-500">Account Status</p>
+          <p className="text-sm text-gray-900">{user.status}</p>
+        </div>
+      </div>
+
       {/* Portfolio ID */}
       <div className="flex items-start">
         <div className="w-8 flex-shrink-0">
@@ -102,7 +116,9 @@ const PersonalInfo: React.FC<PersonalInfoProps> = ({ user }) => {
         </div>
         <div className="flex-1">
           <p className="text-xs text-gray-500">Total Events</p>
-          <p className="text-sm text-gray-900">{user.portfolio.totalEvents} events</p>
+          <p className="text-sm text-gray-900">
+            {user.portfolio.totalEvents} events
+          </p>
         </div>
       </div>
 
@@ -116,17 +132,6 @@ const PersonalInfo: React.FC<PersonalInfoProps> = ({ user }) => {
           <p className="text-sm font-mono text-gray-900 break-all">
             {user.portfolio.profileId}
           </p>
-        </div>
-      </div>
-
-      {/* Status */}
-      <div className="flex items-start">
-        <div className="w-8 flex-shrink-0">
-          <FiCalendar className="w-4 h-4 text-gray-400 mt-0.5" />
-        </div>
-        <div className="flex-1">
-          <p className="text-xs text-gray-500">Account Status</p>
-          <p className="text-sm text-gray-900">{user.status}</p>
         </div>
       </div>
 

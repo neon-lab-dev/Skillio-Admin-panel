@@ -2,12 +2,15 @@ import React, { useState } from "react";
 import { FiUser, FiX, FiMaximize2 } from "react-icons/fi";
 import { getFullName, getProfilePicture } from "../../utils/user.utils";
 import type { UserProfile } from "../../types/user.types";
+import { useUpdateProfileStatusMutation } from "../../redux/Features/User/userApi";
 
 interface ProfileHeaderProps {
+  userId: string;
   user: UserProfile;
 }
 
-const ProfileHeader: React.FC<ProfileHeaderProps> = ({ user }) => {
+const ProfileHeader: React.FC<ProfileHeaderProps> = ({ userId, user }) => {
+  console.log(user);
   const [isImageModalOpen, setIsImageModalOpen] = useState(false);
   const fullName = getFullName(user.firstName, user.lastName);
   const profilePicture = getProfilePicture(user.portfolio.document);
@@ -20,6 +23,23 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({ user }) => {
 
   const closeImageModal = () => {
     setIsImageModalOpen(false);
+  };
+
+
+  const [updateProfileStatus, { isLoading }] = useUpdateProfileStatusMutation();
+
+  const handleUpdateProfileStatus = async (status: string) => {
+    try {
+      const payload = {
+        id: userId,
+        status,
+      };
+
+      const response = await updateProfileStatus(payload).unwrap();
+      console.log("Profile status updated successfully:", response);
+    } catch (error) {
+      console.error("Failed to update profile status:", error);
+    }
   };
 
   return (
@@ -68,11 +88,16 @@ const ProfileHeader: React.FC<ProfileHeaderProps> = ({ user }) => {
               </h1>
               <p className="text-sm text-gray-500 mt-0.5">@{user.nickName}</p>
             </div>
-            {user.isSubscribed && (
-              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                Premium
-              </span>
-            )}
+            <div className="flex items-center gap-3">
+              {user?.status !== "APPROVED" && (
+                <button onClick={() => handleUpdateProfileStatus("APPROVED")} className="px-2.5 py-1 rounded font-medium text-sm bg-green-100 text-green-800 cursor-pointer">
+                  {isLoading ? "Updating..." : "Approve"}
+                </button>
+              )}
+              <button onClick={() => handleUpdateProfileStatus("BLOCKED")} className="px-2.5 py-1 rounded font-medium text-sm bg-red-100 text-red-800 cursor-pointer">
+                {isLoading ? "Updating..." : "Block"}
+              </button>
+            </div>
           </div>
         </div>
       </div>
