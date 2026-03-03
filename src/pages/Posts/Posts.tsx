@@ -12,6 +12,7 @@ const Posts = () => {
   const [selectedDocumentIds, setSelectedDocumentIds] = useState<string[]>([]);
   const [documents, setDocuments] = useState<any[]>([]);
   const [isMediaModalOpen, setIsMediaModalOpen] = useState<boolean>(false);
+  const [searchTerm, setSearchTerm] = useState<string>("");
 
   const [filters, setFilters] = useState({
     page: 1,
@@ -168,7 +169,20 @@ const Posts = () => {
       page: 1,
     }));
   };
+  
+  const handleSearch = (term: string) => {
+  setSearchTerm(term);
+};
 
+const filteredPosts = useMemo(() => {
+  if (!searchTerm.trim()) return posts;
+
+  return posts.filter((post: any) =>
+    post.description
+      ?.toLowerCase()
+      .includes(searchTerm.toLowerCase())
+  );
+}, [posts, searchTerm]);
   return (
     <div>
       <div className="mb-6">
@@ -177,8 +191,9 @@ const Posts = () => {
       </div>
 
       <Table
+      onSearch={handleSearch}
         columns={columns}
-        data={posts}
+        data={filteredPosts}
         page={filters.page}
         onPageChange={handlePageChange}
         onLimitChange={handleLimitChange}
