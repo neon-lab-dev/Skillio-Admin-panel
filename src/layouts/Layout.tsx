@@ -5,10 +5,10 @@ const Layout = () => {
 
   return (
     <div
-      className={`flex bg-gray-5`}
+      className={`flex bg-gray-5  w-full h-screen overflow-x-hidden`}
     >
       <Sidebar />
-      <div className="flex-1 flex flex-col bg-gray-50">
+      <div className="flex flex-col w-full min-w-0 bg-gray-50 ">
         <DashboardHeader />
         <div className="p-6">
           <Outlet />
