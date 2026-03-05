@@ -29,7 +29,7 @@ const Dashboard = () => {
     {
       id: "total-users",
       title: "Total Users",
-      value: 0,
+      value: 420,
       icon: Users,
       color: "text-blue-600",
       bgColor: "bg-blue-50",
@@ -38,7 +38,7 @@ const Dashboard = () => {
     {
       id: "total-posts",
       title: "Total Posts",
-      value: 0,
+      value: 2362,
       icon: FileText,
       color: "text-green-600",
       bgColor: "bg-green-50",
@@ -47,7 +47,7 @@ const Dashboard = () => {
     {
       id: "individuals",
       title: "Individuals",
-      value: 0,
+      value: 13,
       icon: User,
       color: "text-purple-600",
       bgColor: "bg-purple-50",
@@ -56,7 +56,7 @@ const Dashboard = () => {
     {
       id: "professionals",
       title: "Professionals",
-      value: 0,
+      value: 67,
       icon: Briefcase,
       color: "text-amber-600",
       bgColor: "bg-amber-50",
@@ -67,7 +67,7 @@ const Dashboard = () => {
     {
       id: "skilled-users",
       title: "Skilled Users",
-      value: 0,
+      value: 25,
       icon: UserCheck,
       color: "text-emerald-600",
       bgColor: "bg-emerald-50",
@@ -76,7 +76,7 @@ const Dashboard = () => {
     {
       id: "groups",
       title: "Groups",
-      value: 0,
+      value: 10,
       icon: GroupsIcon,
       color: "text-indigo-600",
       bgColor: "bg-indigo-50",
@@ -94,7 +94,7 @@ const Dashboard = () => {
     {
       id: "active-subscriptions",
       title: "Active Subscriptions",
-      value: 0,
+      value: 2,
       icon: CreditCard,
       color: "text-rose-600",
       bgColor: "bg-rose-50",

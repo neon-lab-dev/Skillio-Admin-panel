@@ -3,7 +3,6 @@ import {
   Users,
   User,
   UsersRound,
-  BadgeCheck,
   CreditCard,
   FileText,
   LogOut,
@@ -44,11 +43,11 @@ export function Sidebar() {
     path: "/dashboard/groups",
     icon: UsersRound,
   },
-  {
-    label: "Professional Requests",
-    path: "/dashboard/professionals-requests",
-    icon: BadgeCheck,
-  },
+  // {
+  //   label: "Professional Requests",
+  //   path: "/dashboard/professionals-requests",
+  //   icon: BadgeCheck,
+  // },
   // {
   //   label: "Subscription Statistics",
   //   path: "/dashboard/subscription-statistics",

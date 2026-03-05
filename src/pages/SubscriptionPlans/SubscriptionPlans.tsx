@@ -24,6 +24,11 @@ type TFormData = {
   type: "SUBSCRIPTION" | "ADD_ON";
   priceInPaise: number;
   status: "DRAFT" | "COMPLETE";
+  profileVisibility: string;
+  active: boolean;
+  callLimits: number;
+  chatLimits: number;
+  validity: number;
 };
 const SubscriptionPlans = () => {
   const { data, isLoading } = useGetAllSubscriptionsQuery({});
@@ -71,10 +76,52 @@ const SubscriptionPlans = () => {
         <div>₹ {(item.priceInPaise / 100).toFixed(2)}</div>
       ),
     },
+
+    {
+      key: "profileVisibility",
+      header: "Profile Visibility",
+      render: (item: any) => <div>{item.profileVisibility || "-"}</div>,
+    },
+
+    {
+      key: "callLimits",
+      header: "Call Limits",
+      render: (item: any) => <div>{item.callLimits ?? "-"}</div>,
+    },
+
+    {
+      key: "chatLimits",
+      header: "Chat Limits",
+      render: (item: any) => <div>{item.chatLimits ?? "-"}</div>,
+    },
+
+    {
+      key: "validity",
+      header: "Validity (Days)",
+      render: (item: any) => <div>{item.validity ?? "-"}</div>,
+    },
+
     {
       key: "type",
       header: "Type",
     },
+
+    {
+      key: "active",
+      header: "Active",
+      render: (item: any) => (
+        <span
+          className={`px-2 py-1 text-xs rounded-full ${
+            item.active
+              ? "bg-green-100 text-green-800"
+              : "bg-red-100 text-red-800"
+          }`}
+        >
+          {item.active ? "Yes" : "No"}
+        </span>
+      ),
+    },
+
     {
       key: "status",
       header: "Status",
@@ -98,40 +145,22 @@ const SubscriptionPlans = () => {
         );
       },
     },
-    // {
-    //   key: "active",
-    //   header: "Active",
-    //   render: (item: any) => (
-    //     <span
-    //       className={`px-2 py-1 text-xs rounded-full ${
-    //         item.active
-    //           ? "bg-green-100 text-green-800"
-    //           : "bg-red-100 text-red-800"
-    //       }`}
-    //     >
-    //       {item.active ? "Yes" : "No"}
-    //     </span>
-    //   ),
-    // },
+
     {
       key: "actions",
       header: "Actions",
       render: (item: any) => (
         <div className="flex items-center gap-3">
-          {/* Update */}
           <button
             onClick={() => handleUpdate(item)}
             className="p-2 rounded-md bg-blue-100 text-blue-600 hover:bg-blue-200 transition cursor-pointer"
-            title="Update"
           >
             <FiEdit size={16} />
           </button>
 
-          {/* Delete */}
           <button
             onClick={() => handleDeletePlan(item?.id)}
             className="p-2 rounded-md bg-red-100 text-red-600 hover:bg-red-200 transition cursor-pointer"
-            title="Delete"
           >
             <FiTrash2 size={16} />
           </button>
@@ -151,7 +180,12 @@ const SubscriptionPlans = () => {
         type: data.type,
         priceInPaise: data.priceInPaise * 100,
         status: data.status,
-        priority : data.priority
+        priority: data.priority,
+        profileVisibility: data.profileVisibility,
+        active: String(data.active) === "true",
+        callLimits: Number(data.callLimits),
+        chatLimits: Number(data.chatLimits),
+        validity: Number(data.validity),
       };
 
       let response;
@@ -188,13 +222,18 @@ const SubscriptionPlans = () => {
     setValue("priceInPaise", item.priceInPaise / 100);
     setValue("status", item.status);
     setValue("priority", item.priority);
+    setValue("profileVisibility", item.profileVisibility);
+    setValue("active", item.active);
+    setValue("callLimits", item.callLimits);
+    setValue("chatLimits", item.chatLimits);
+    setValue("validity", item.validity);
   };
 
   const handleDeletePlan = async (id: string) => {
     try {
       const payload = {
         ids: [id],
-        "hard": true
+        hard: true,
       };
       await toast.promise(deleteSubscriptionPlan(payload).unwrap(), {
         loading: "Loading...",
@@ -237,12 +276,13 @@ const SubscriptionPlans = () => {
         totalItems={data?.data?.total}
         isLoading={isLoading}
         page={data?.data?.page || 1}
+        placeholder="Search by plan code"
       />
 
       <Modal
         isModalOpen={isAddPlanModalOpen}
         setIsModalOpen={setIsAddPlanModalOpen}
-        heading={`${modalType === "add" ? "Add" : "Update"} Notice`}
+        heading={`${modalType === "add" ? "Add" : "Update"} New Plan`}
       >
         <div className="relative">
           {isLoading && (
@@ -315,6 +355,65 @@ const SubscriptionPlans = () => {
                 ]}
                 error={errors.status}
                 {...register("status", { required: "Status is required" })}
+              />
+
+              {/* Profile Visibility */}
+              <SelectDropdown
+                label="Profile Visibility"
+                options={[
+                  { label: "True", value: "ONE" },
+                  { label: "False", value: "ZERO" },
+                ]}
+                error={errors.profileVisibility}
+                {...register("profileVisibility", {
+                  required: "Profile visibility is required",
+                })}
+              />
+
+              {/* Active */}
+              <SelectDropdown
+                label="Active Status"
+                options={[
+                  { label: "True", value: "true" },
+                  { label: "False", value: "false" },
+                ]}
+                error={errors.active}
+                {...register("active", {
+                  required: "Active status is required",
+                })}
+              />
+
+              <TextInput
+                label="Call Limits"
+                type="number"
+                placeholder="Enter call limits (e.g. 99)"
+                error={errors.callLimits}
+                {...register("callLimits", {
+                  required: "Call limits is required",
+                  valueAsNumber: true,
+                })}
+              />
+
+              <TextInput
+                label="Chat Limits"
+                type="number"
+                placeholder="Enter chat limits (e.g. 500)"
+                error={errors.chatLimits}
+                {...register("chatLimits", {
+                  required: "Chat limits is required",
+                  valueAsNumber: true,
+                })}
+              />
+
+              <TextInput
+                label="Validity (in days)"
+                type="number"
+                placeholder="Enter validity (e.g. 30)"
+                error={errors.validity}
+                {...register("validity", {
+                  required: "Validity is required",
+                  valueAsNumber: true,
+                })}
               />
             </div>
 

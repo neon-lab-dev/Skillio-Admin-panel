@@ -200,6 +200,7 @@ const filteredPosts = useMemo(() => {
         currentLimit={filters.perPage}
         totalItems={data?.data?.total || 0}
         isLoading={isLoading}
+        placeholder="Search by post"
       />
 
       <PostMediaModal

@@ -3,8 +3,10 @@
 import { useState, useEffect } from "react";
 import { useGetAllUsersQuery } from "../../redux/Features/Auth/authApi";
 import Table from "../../components/reusable/Table/Table";
+import { useNavigate } from "react-router-dom";
 
 const Groups = () => {
+  const navigate = useNavigate();
   const [filters, setFilters] = useState({
     page: 1,
     perPage: 10,
@@ -33,20 +35,14 @@ const Groups = () => {
       key: "nickName",
       header: "Group Name",
       render: (item: any) => (
-        <div className="font-medium text-gray-900">
-          {item.nickName || "-"}
-        </div>
+        <div className="font-medium text-gray-900">{item.nickName || "-"}</div>
       ),
     },
     {
       key: "email",
       header: "Email",
       render: (item: any) => (
-        <div>
-          {item.email && item.email.length > 0
-            ? item.email[0]
-            : "-"}
-        </div>
+        <div>{item.email && item.email.length > 0 ? item.email[0] : "-"}</div>
       ),
     },
     {
@@ -87,6 +83,18 @@ const Groups = () => {
         >
           {item.status}
         </span>
+      ),
+    },
+    {
+      key: "actions",
+      header: "Actions",
+      render: (item: any) => (
+        <button
+          onClick={() => navigate(`/dashboard/user/${item.id}`)}
+          className="px-3 py-1 text-sm bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition cursor-pointer"
+        >
+          View Details
+        </button>
       ),
     },
   ];
@@ -143,9 +151,7 @@ const Groups = () => {
   return (
     <div>
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">
-          Group Users
-        </h1>
+        <h1 className="text-2xl font-bold text-gray-900">Group Users</h1>
         <p className="text-sm text-gray-600 mt-1">
           Manage and view all group accounts
         </p>
@@ -163,6 +169,7 @@ const Groups = () => {
         currentLimit={filters.perPage}
         totalItems={data?.data?.total || 0}
         isLoading={isLoading}
+        placeholder="Search by group name"
       />
     </div>
   );

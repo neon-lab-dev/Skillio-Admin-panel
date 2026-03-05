@@ -15,8 +15,7 @@ const AllUsers = () => {
     phoneNumber: "",
     profileType: "",
     proficiency: "",
-    city: "",
-    country: "",
+    status: "",
   });
 
   const { data, isLoading } = useGetAllUsersQuery(filters);
@@ -138,6 +137,15 @@ const AllUsers = () => {
         { value: "SKILLED", label: "Skilled" },
       ],
     },
+    {
+      key: "status",
+      label: "Status",
+      options: [
+        { value: "APPROVED", label: "Approved" },
+        { value: "PENDING", label: "Pending" },
+        { value: "BLOCKED", label: "Blocked" },
+      ],
+    },
   ];
 
   const handleSearch = (searchTerm: string) => {
@@ -188,6 +196,7 @@ const AllUsers = () => {
         currentLimit={filters.perPage}
         totalItems={data?.data?.total}
         isLoading={isLoading}
+        placeholder="Search by nickName, email, or phone..."
       />
     </div>
   );

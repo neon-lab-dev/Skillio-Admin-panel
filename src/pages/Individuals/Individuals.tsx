@@ -3,8 +3,10 @@
 import { useState, useEffect } from "react";
 import { useGetAllUsersQuery } from "../../redux/Features/Auth/authApi";
 import Table from "../../components/reusable/Table/Table";
+import { useNavigate } from "react-router-dom";
 
 const Individuals = () => {
+  const navigate = useNavigate();
   const [filters, setFilters] = useState({
     page: 1,
     perPage: 10,
@@ -90,6 +92,18 @@ const Individuals = () => {
         </span>
       ),
     },
+    {
+      key: "actions",
+      header: "Actions",
+      render: (item: any) => (
+        <button
+          onClick={() => navigate(`/dashboard/user/${item.id}`)}
+          className="px-3 py-1 text-sm bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition cursor-pointer"
+        >
+          View Details
+        </button>
+      ),
+    },
   ];
 
   // Only Proficiency Filter
@@ -164,6 +178,7 @@ const Individuals = () => {
         currentLimit={filters.perPage}
         totalItems={data?.data?.total || 0}
         isLoading={isLoading}
+        placeholder="Search by individual name"
       />
     </div>
   );

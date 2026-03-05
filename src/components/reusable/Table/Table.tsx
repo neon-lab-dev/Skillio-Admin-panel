@@ -40,6 +40,7 @@ interface ReusableTableProps<T> {
   totalItems?: number;
   isLoading?: boolean;
   children?: React.ReactNode;
+  placeholder?: string;
 }
 
 const Table = <T extends Record<string, any>>({
@@ -56,6 +57,7 @@ const Table = <T extends Record<string, any>>({
   totalItems = 0,
   isLoading = false,
   children,
+  placeholder,
 }: ReusableTableProps<T>) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [openDropdownId, setOpenDropdownId] = useState<string | null>(null);
@@ -88,7 +90,7 @@ const Table = <T extends Record<string, any>>({
           <div className="relative">
             <input
               type="text"
-              placeholder="Search by nickName, email, or phone..."
+              placeholder={placeholder}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
