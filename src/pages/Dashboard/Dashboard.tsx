@@ -10,6 +10,8 @@ import {
   Clock,
   CreditCard,
 } from "lucide-react";
+import { useGetStatsQuery } from "../../redux/Features/Dashboard/dashboardApi";
+import Loader from "../../components/shared/Loader/Loader";
 
 
 export interface DashboardCard {
@@ -25,11 +27,13 @@ export interface DashboardCard {
 }
 
 const Dashboard = () => {
+  const {data, isLoading} = useGetStatsQuery({});
+  const stats = data?.data || {};
   const dashboardCards: DashboardCard[] = [
     {
       id: "total-users",
       title: "Total Users",
-      value: 420,
+      value: stats?.totalUsers || 0,
       icon: Users,
       color: "text-blue-600",
       bgColor: "bg-blue-50",
@@ -38,7 +42,7 @@ const Dashboard = () => {
     {
       id: "total-posts",
       title: "Total Posts",
-      value: 2362,
+      value: stats?.totalPosts || 0,
       icon: FileText,
       color: "text-green-600",
       bgColor: "bg-green-50",
@@ -47,7 +51,7 @@ const Dashboard = () => {
     {
       id: "individuals",
       title: "Individuals",
-      value: 13,
+      value: stats?.totalIndividuals || 0,
       icon: User,
       color: "text-purple-600",
       bgColor: "bg-purple-50",
@@ -56,7 +60,7 @@ const Dashboard = () => {
     {
       id: "professionals",
       title: "Professionals",
-      value: 67,
+      value: stats?.totalProfessional || 0,
       icon: Briefcase,
       color: "text-amber-600",
       bgColor: "bg-amber-50",
@@ -67,7 +71,7 @@ const Dashboard = () => {
     {
       id: "skilled-users",
       title: "Skilled Users",
-      value: 25,
+      value: stats?.totalSkilled || 0,
       icon: UserCheck,
       color: "text-emerald-600",
       bgColor: "bg-emerald-50",
@@ -76,7 +80,7 @@ const Dashboard = () => {
     {
       id: "groups",
       title: "Groups",
-      value: 10,
+      value: stats?.totalGroups || 0,
       icon: GroupsIcon,
       color: "text-indigo-600",
       bgColor: "bg-indigo-50",
@@ -85,7 +89,7 @@ const Dashboard = () => {
     {
       id: "pending-verifications",
       title: "Pending Verifications",
-      value: 0,
+      value: stats?.pendingVerifications || 0,
       icon: Clock,
       color: "text-orange-600",
       bgColor: "bg-orange-50",
@@ -94,13 +98,18 @@ const Dashboard = () => {
     {
       id: "active-subscriptions",
       title: "Active Subscriptions",
-      value: 2,
+      value: stats?.activeSubscriptions || 0,
       icon: CreditCard,
       color: "text-rose-600",
       bgColor: "bg-rose-50",
       endpoint: "/api/admin/subscriptions/statistics",
     },
   ];
+
+
+   if (isLoading) {
+      return <Loader size="size-20" />;
+    }
 
   return (
     <div>
